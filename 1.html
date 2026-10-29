@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>대구일중 사이드바 1판</title>
+<style>
+:root{
+  --ink:#1d2433; --muted:#5b6472; --line:#e3e3df; --panel:#f7f7f5; --paper:#ffffff;
+  --blue:#2563eb; --blue-soft:#eef4ff; --red:#e5484d; --desk:#3e4a5b;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  font-size:16px;line-height:1.7;word-break:keep-all}
+img{display:block;max-width:100%;height:auto}
+a{color:var(--blue)}
+kbd{font-family:inherit;font-size:.9em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* 첫 화면 */
+.hero{padding:56px 0 40px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:center}
+.hero h1{font-size:40px;line-height:1.25;margin:0 0 18px;letter-spacing:-.02em}
+.hero p{margin:0 0 12px;color:var(--muted);max-width:30em}
+.hero p.lead{color:var(--ink);font-size:18px}
+
+.monitor{width:100%}
+.screen{position:relative;aspect-ratio:16/9;background:var(--desk);border:10px solid #1f2530;border-radius:12px;overflow:hidden}
+.stand{width:22%;height:22px;margin:0 auto;background:#c9ccd2;clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)}
+.doc{position:absolute;left:6%;top:8%;width:60%;height:74%;background:#fff;border-radius:4px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.doc .bar{height:9%;background:#e9ecf1;border-radius:4px 4px 0 0}
+.doc .ln{height:3.2%;margin:4.5% 8% 0;background:#e6e8ec;border-radius:2px}
+.doc .ln.s{width:46%}
+.taskbar{position:absolute;left:0;right:0;bottom:0;height:6%;background:rgba(20,24,32,.85)}
+.edge{position:absolute;top:0;right:0;width:7%;height:94%;cursor:pointer}
+.strip{position:absolute;top:5%;right:0;width:5px;height:89%;background:var(--blue);border-radius:3px 0 0 3px;animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{background:var(--blue)}50%{background:var(--red)}}
+.side{position:absolute;top:0;right:0;height:94%;width:auto;max-width:none;transform:translateX(102%);transition:transform .35s cubic-bezier(.2,.7,.2,1);box-shadow:-6px 0 18px rgba(0,0,0,.25)}
+.screen.open .side{transform:none}
+.demo-ctl{display:flex;align-items:center;gap:12px;margin-top:14px;font-size:14px;color:var(--muted)}
+.demo-ctl button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;color:var(--ink)}
+.demo-ctl button:focus-visible,.edge:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+/* 쓰는 모습 */
+.facts{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;font-size:15px}
+.facts b{display:block;font-size:15px}
+.facts span{color:var(--muted)}
+
+.page{padding:48px 0;border-bottom:1px solid var(--line)}
+.page-h{display:flex;align-items:center;gap:12px;margin:0 0 6px}
+.page-h .ic{width:40px;height:40px;border-radius:10px;background:var(--blue-soft);display:grid;place-items:center;flex:none}
+.page-h .ic svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.page-h h2{font-size:26px;margin:0;letter-spacing:-.01em}
+.page-sub{color:var(--muted);margin:0 0 28px 52px}
+
+.row{display:grid;grid-template-columns:320px minmax(0,1fr);gap:40px;align-items:start;margin-top:32px}
+.row:first-of-type{margin-top:0}
+.shot{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;width:320px;max-width:100%}
+.shot.pair img+img{border-top:1px solid var(--line)}
+.note h3{font-size:19px;margin:4px 0 10px}
+.note p{margin:0 0 12px;max-width:34em}
+.note .when{color:var(--muted)}
+.caution{margin-top:14px;padding:12px 14px;background:#fff8e6;border-radius:8px;font-size:15px}
+
+/* 처음 켤 때 */
+.start{padding:48px 0;border-bottom:1px solid var(--line)}
+.start h2,.know h2{font-size:26px;margin:0 0 24px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.steps li{counter-increment:s;position:relative;padding-top:44px}
+.steps li::before{content:counter(s);position:absolute;top:0;left:0;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:grid;place-items:center;font-size:15px}
+.steps b{display:block;margin-bottom:6px}
+.steps p{margin:0;color:var(--muted);font-size:15px}
+.keys{margin-top:28px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:40px;align-items:start}
+
+.know{padding:48px 0}
+.know ul{margin:0;padding-left:1.2em;max-width:44em}
+.know li{margin-bottom:10px}
+.end{padding:8px 0 64px}
+.end p{font-size:18px;margin:0 0 8px}
+.sign{color:var(--muted);font-size:15px;margin-top:20px}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:36px;gap:28px}
+  .hero h1{font-size:32px}
+  .facts{grid-template-columns:1fr 1fr}
+  .row,.keys{grid-template-columns:1fr;gap:18px}
+  .page-sub{margin-left:0}
+  .steps{grid-template-columns:1fr;gap:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  .strip{animation:none}
+  .side{transition:none}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <h1>대구일중 사이드바</h1>
+      <p class="lead">화면 오른쪽 끝에 숨어 있다가 마우스를 대면 펼쳐지는 업무 도우미입니다.</p>
+      <p>시간표, 급식, 마감 일정, 메모, 자주 여는 프로그램을 창을 바꾸지 않고 한 번에 보고 싶었습니다. 이렇게 쓰면 편할 것 같아서 만들어 봤습니다.</p>
+    </div>
+    <div class="monitor">
+      <div class="screen" id="screen">
+        <div class="doc"><div class="bar"></div><div class="ln"></div><div class="ln"></div><div class="ln s"></div><div class="ln"></div><div class="ln"></div><div class="ln s"></div><div class="ln"></div></div>
+        <div class="taskbar"></div>
+        <div class="strip"></div>
+        <div class="edge" id="edge" tabindex="0" role="button" aria-label="사이드바 펼치기"></div>
+        <img class="side" id="side" src="img/full_today.png" alt="펼친 사이드바: 이번 주 시간표, 오늘 급식, 마감 일정" width="372" height="1032">
+      </div>
+      <div class="stand"></div>
+      <div class="demo-ctl">
+        <button type="button" id="toggle">펼쳐 보기</button>
+        <span>모니터 오른쪽 끝에 마우스를 대도 펼쳐져요.</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="facts" aria-label="간단히">
+    <div><b>설치 없음</b><span>exe 파일 하나, 더블클릭으로 켜요</span></div>
+    <div><b>오른쪽 끝 파란 띠</b><span>마우스를 대면 펼쳐지고, 빼면 접혀요</span></div>
+    <div><b>마감이 다가오면</b><span>띠가 빨갛게 천천히 깜빡여요</span></div>
+    <div><b>세 장으로 나눠서</b><span>오늘 · 일정·메모 · 도구</span></div>
+  </section>
+
+  <section class="page">
+    <div class="page-h">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg></div>
+      <h2>오늘</h2>
+    </div>
+    <p class="page-sub">아침에 한 번 펼쳐 보면 오늘 할 일이 다 보입니다.</p>
+
+    <div class="row">
+      <div class="shot"><img src="img/today.png" alt="이번 주 시간표와 오늘 급식" width="320" height="604"></div>
+      <div class="note">
+        <h3>시간표와 급식</h3>
+        <p>이번 주 시간표가 컴시간에서 바로 들어옵니다. 오늘은 파란 열, 지금 교시는 파란 띠로 보여요.</p>
+        <p><b>노란 칸은 바뀐 수업</b>입니다. 마우스를 올리면 원래 수업이 나와요.</p>
+        <p>시간표 위 버튼으로 우리 반, 다른 반, 다른 선생님 시간표를 바로 바꿔 볼 수 있어요. 담임이시면 우리 반을 처음 화면으로 둬도 됩니다.</p>
+        <p class="when">아래에는 오늘 중식이 알레르기 번호 없이 나옵니다.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="shot"><img src="img/schedule.png" alt="마감일 순 일정 목록과 D-day" width="320" height="389"></div>
+      <div class="note">
+        <h3>마감 일정</h3>
+        <p>할 일을 마감일 순으로 줄 세웁니다. 사흘 안이면 주황, 당일이면 빨강으로 바뀌어요.</p>
+        <p>마감 3일 전, 1일 전, 당일 아침 8시에 윈도우 알림이 옵니다. 끝낸 일은 체크하면 아래로 내려가요.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="shot"><img src="img/capture.png" alt="공문 캡처에서 찾은 일정 카드" width="320" height="501"></div>
+      <div class="note">
+        <h3>공문 캡처로 추가</h3>
+        <p>공문, 메신저, 안내문에서 날짜가 있는 부분을 드래그하면 AI가 할 일, 날짜, 제출처를 카드로 뽑아 줍니다.</p>
+        <p>틀린 곳만 고치고 <b>저장</b>을 누르면 일정에 들어가요. 날짜를 못 찾은 카드는 날짜 칸이 비어 있으니 직접 넣어 주세요.</p>
+        <p class="caution">무료 Gemini는 보낸 화면이 Google 제품 개선에 쓰일 수 있습니다. 학생 이름이 보이는 화면은 도구 장의 <b>글자만 복사</b>를 쓰세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="page-h">
+      <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/></svg></div>
+      <h2>일정 · 메모</h2>
+    </div>
+    <p class="page-sub">학교 일정과 내 일정을 한 화면에서, 떠오른 건 한 줄로.</p>
+
+    <div class="row">
+      <div class="shot"><img src="img/cal.png" alt="학사일정, 구글 캘린더, 내 일정이 함께 보이는 달력" width="320" height="509"></div>
+      <div class="note">
+        <h3>달력</h3>
+        <p>나이스 학사일정(노랑), 구글 캘린더(파랑), 내 마감 일정(빨강)이 한 달력에 같이 나옵니다.</p>
+        <p>위 버튼으로 하나씩 켜고 끌 수 있어요. 기본은 이번 주 목록이고, <b>월간</b>을 누르면 한 달이 보입니다.</p>
+        <p class="when">구글 캘린더는 설정에서 내 계정을 한 번 연결해야 나와요.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="shot"><img src="img/memo.png" alt="메모 검색, 태그, 한 줄 메모 쓰기" width="320" height="208"></div>
+      <div class="note">
+        <h3>메모</h3>
+        <p>한 줄 쓰고 <kbd>Enter</kbd>면 저장됩니다. 위에서 고른 태그가 같이 붙어요.</p>
+        <p>검색창에 <kbd>#회의</kbd>처럼 쓰면 그 태그만 모아 봅니다. 잘못 지웠으면 5초 안에 되돌리기를 누르세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="page-h">
+      <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></div>
+      <h2>도구</h2>
+    </div>
+    <p class="page-sub">매일 몇 번씩 하는 손일을 줄여 주는 칸입니다.</p>
+
+    <div class="row">
+      <div class="shot pair"><img src="img/weather.png" alt="날씨, 미세먼지, D-day" width="320" height="124"><img src="img/links.png" alt="바로가기 버튼" width="320" height="219"></div>
+      <div class="note">
+        <h3>날씨와 바로가기</h3>
+        <p>학교 동네 날씨, 비 소식, 미세먼지가 한 줄로 나옵니다. 오후에 비가 오면 몇 시부터인지도 알려 줘요. 시험이나 행사까지 남은 날은 D-day로 걸어 둘 수 있습니다.</p>
+        <p>바로가기에는 프로그램, 폴더, 파일을 <b>끌어다 놓으면</b> 버튼이 생기고, 사이트는 주소만 붙여 넣으면 됩니다. 처음에는 Claude, ChatGPT, Gemini, 업무포털, 네이버가 깔려 있어요.</p>
+        <p class="when">여러 개를 묶어 두면 버튼 하나로 업무포털, 메신저, 한글을 한꺼번에 엽니다. 업무포털은 페이지 열기까지만 하고 인증서 비밀번호는 저장하지 않아요.</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="shot"><img src="img/clip.png" alt="클립보드 기록과 글자만 복사, 오늘 날짜 복사 버튼" width="320" height="397"></div>
+      <div class="note">
+        <h3>클립보드와 복사 도구</h3>
+        <p>복사한 글이 최근 10개까지 남습니다. 누르면 다시 복사되고, 자주 쓰는 건 핀으로 고정해 둬요.</p>
+        <p><b>글자만 복사</b>는 드래그한 화면의 글자를 윈도우 글자 인식으로 읽어 복사합니다. 인터넷으로 보내지 않아서 학생 이름이 있는 화면도 괜찮아요.</p>
+        <p><b>오늘 날짜 복사</b>를 누르면 <kbd>2026. 10. 29.(목)</kbd> 모양으로 복사됩니다. 한글에서 <kbd>Ctrl</kbd>+<kbd>V</kbd>만 하면 돼요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="start">
+    <h2>처음 켤 때</h2>
+    <ol class="steps">
+      <li><b>exe를 두고 더블클릭</b><p><kbd>대구일중-사이드바.exe</kbd>를 바탕 화면이나 내 문서에 두고 켭니다. 설치는 없어요. "PC 보호" 창이 뜨면 추가 정보 → 실행을 누르세요.</p></li>
+      <li><b>내 이름 한 번 누르기</b><p>컴시간에 보이는 내 이름(끝 글자는 *)을 성으로 찾아 누르면, 다음부터 바로 내 시간표가 나옵니다. 수업이 없으시면 '수업이 없어요'를 누르세요.</p></li>
+      <li><b>오른쪽 끝에 마우스</b><p>파란 띠에 마우스를 대면 펼쳐집니다. 윈도우를 켤 때 같이 켜지게 하려면 톱니(설정)에서 자동 실행을 켜세요.</p></li>
+    </ol>
+    <div class="keys">
+      <div class="shot"><img src="img/setup.png" alt="처음 켰을 때 내 이름 고르기 화면" width="320" height="294"></div>
+      <div class="note">
+        <h3>키는 필요한 분만</h3>
+        <p>아무 키 없이도 시간표, 급식, 학사일정, 메모, 바로가기, 클립보드는 바로 됩니다.</p>
+        <p>공문 캡처는 <b>Gemini 키</b>, 날씨와 미세먼지는 <b>공공데이터포털 키</b>가 있어야 나와요. 둘 다 무료로 받을 수 있고, 설정에 붙여 넣으면 이 PC에만 저장됩니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="know">
+    <h2>알아 두실 점</h2>
+    <ul>
+      <li>일정, 메모, 바로가기는 <b>내 문서\대구일중-사이드바</b> 폴더에 저장됩니다. 구글 드라이브 폴더로 바꾸면 다른 PC에서도 같이 볼 수 있어요.</li>
+      <li>컴시간 연결은 공식 연결이 아니라서 컴시간 쪽이 바뀌면 시간표가 잠시 안 나올 수 있습니다. 그때는 마지막으로 받은 시간표를 보여 줘요.</li>
+      <li>켤 때 몇 초 걸리고, 작업 표시줄에는 나오지 않습니다. 끌 때는 펼친 뒤 오른쪽 위 × → 끄기를 누르세요.</li>
+      <li>자세한 사용법은 <b>사용법</b> 파일에 따로 정리해 두었습니다.</li>
+    </ul>
+  </section>
+
+  <footer class="end">
+    <p>필요하신 분은 말씀해 주세요. 파일을 보내 드리겠습니다.</p>
+    <p class="sign">Teacher B</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var screen=document.getElementById('screen'), edge=document.getElementById('edge'),
+      side=document.getElementById('side'), btn=document.getElementById('toggle'), t=null;
+  function setOpen(v){
+    screen.classList.toggle('open',v);
+    btn.textContent=v?'접기':'펼쳐 보기';
+    edge.setAttribute('aria-label',v?'사이드바 접기':'사이드바 펼치기');
+  }
+  function open(){clearTimeout(t);setOpen(true)}
+  function closeLater(){clearTimeout(t);t=setTimeout(function(){setOpen(false)},500)}
+  edge.addEventListener('mouseenter',open);
+  side.addEventListener('mouseenter',open);
+  side.addEventListener('mouseleave',closeLater);
+  edge.addEventListener('mouseleave',function(e){if(e.relatedTarget!==side)closeLater()});
+  edge.addEventListener('click',function(){setOpen(!screen.classList.contains('open'))});
+  edge.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();setOpen(!screen.classList.contains('open'))}});
+  btn.addEventListener('click',function(){clearTimeout(t);setOpen(!screen.classList.contains('open'))});
+  setTimeout(function(){setOpen(true)},900);
+})();
+</script>
+</body>
+</html>

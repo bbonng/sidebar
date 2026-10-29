@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>레퍼런스 하나가 바꾼 것</title>
+<link rel="icon" href="img/icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 세 판을 나란히 놓고, 각 판이 나온 대화를 따라 내려가는 구성 */
+:root{
+  --paper:#fbfbfa; --ink:#18181b; --dim:#5f5f66; --mute:#93939a; --line:#e7e7e3; --card:#ffffff;
+  --v1:#9ca3af; --v2:#4f6fa8; --v3:#0b0b0d; --me:#2563eb; --ai:#f1f1ee; --warn:#fff4d6;
+  --sans:"Pretendard","Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.7;word-break:keep-all;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-left,0px))}
+h1,h2,h3{text-wrap:balance;letter-spacing:-.03em}
+
+/* 첫 화면 */
+.top{padding-block:72px 40px}
+.kicker{font-size:14px;color:var(--mute);margin:0 0 14px}
+.top h1{font-size:64px;line-height:1.12;margin:0 0 20px;font-weight:800}
+.top p{max-width:36em;color:var(--dim);margin:0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+.shot{margin:0}
+.frame{border-radius:12px;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px var(--line),0 18px 40px rgba(24,24,27,.10)}
+.frame .bar{height:26px;background:#efefec;display:flex;align-items:center;gap:6px;padding:0 10px}
+.frame .bar i{width:9px;height:9px;border-radius:50%;background:#d6d6d2}
+.shot figcaption{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:15px;color:var(--dim)}
+.tag{display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:999px;color:#fff;font-size:13px;font-weight:700;white-space:nowrap}
+.t1{background:var(--v1)} .t2{background:var(--v2)} .t3{background:var(--v3)}
+
+/* 판별 이야기 */
+.round{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:56px;align-items:start;padding-block:88px;border-top:1px solid var(--line)}
+.round h2{font-size:40px;line-height:1.2;margin:14px 0 18px;font-weight:800}
+.round .lead{color:var(--dim);margin:0 0 26px}
+.chat{display:flex;flex-direction:column;gap:10px;margin:0 0 26px}
+.msg{max-width:88%;padding:12px 16px;border-radius:18px;font-size:16.5px;line-height:1.55}
+.msg.me{align-self:flex-end;background:var(--me);color:#fff;border-bottom-right-radius:6px}
+.msg.ai{align-self:flex-start;background:var(--ai);color:var(--ink);border-bottom-left-radius:6px}
+.who{font-size:12.5px;color:var(--mute);margin:6px 4px -4px}
+.who.r{align-self:flex-end}
+.saw{border-left:3px solid var(--ink);padding:4px 0 4px 16px;margin:0}
+.saw b{display:block;font-size:14px;color:var(--mute);font-weight:600;margin-bottom:2px}
+.saw p{margin:0}
+.side .frame{position:sticky;top:24px}
+.open{display:inline-block;margin-top:16px;font-size:15px;color:var(--dim)}
+.open:hover{color:var(--ink)}
+
+/* 비교표 */
+.diff{padding:88px 0;border-top:1px solid var(--line)}
+.diff h2,.learn h2,.try h2{font-size:40px;margin:0 0 30px;font-weight:800}
+.tablebox{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px;font-size:16.5px}
+th,td{text-align:left;vertical-align:top;padding:16px 18px;border-bottom:1px solid var(--line)}
+thead th{font-size:14px;color:var(--mute);font-weight:600}
+tbody th{width:140px;font-weight:700}
+
+/* 배운 것 */
+.learn{padding:88px 0;border-top:1px solid var(--line)}
+.points{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.point{background:var(--card);border-radius:18px;padding:28px 30px;box-shadow:0 0 0 1px var(--line)}
+.point h3{font-size:23px;margin:0 0 10px;line-height:1.35}
+.point p{margin:0;color:var(--dim);font-size:16.5px}
+
+/* 해 보기 */
+.try{padding:88px 0;border-top:1px solid var(--line)}
+.prompts{display:grid;gap:14px}
+.prompt{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:20px;align-items:center;background:var(--card);border-radius:16px;padding:20px 24px;box-shadow:0 0 0 1px var(--line)}
+.prompt span{font-size:14px;color:var(--mute)}
+.prompt q{quotes:none;font-size:18px;font-weight:600}
+.copy{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 14px;cursor:pointer;color:var(--ink);white-space:nowrap}
+.copy:focus-visible,.open:focus-visible{outline:3px solid var(--me);outline-offset:3px}
+
+/* 세 판 통째로 */
+.whole{padding:88px 0;border-top:1px solid var(--line)}
+.whole h2{font-size:40px;margin:0 0 12px;font-weight:800}
+.whole > .wrap > p{color:var(--dim);margin:0 0 30px}
+.strips{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:start}
+.strip a{display:block;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+.strip p{margin:12px 0 0;font-size:15px;color:var(--dim)}
+.foot{padding:40px 0 64px;color:var(--mute);font-size:14px;border-top:1px solid var(--line)}
+
+@media (max-width:900px){
+  body{font-size:16.5px}
+  .top h1{font-size:40px}
+  .three,.strips{grid-template-columns:1fr}
+  .round{grid-template-columns:1fr;gap:28px;padding-block:64px}
+  .round h2,.diff h2,.learn h2,.try h2,.whole h2{font-size:30px}
+  .side .frame{position:static}
+  .points{grid-template-columns:1fr}
+  .prompt{grid-template-columns:1fr;gap:8px}
+  .copy{justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top wrap">
+  <p class="kicker">AI와 소개 페이지 만들기 · 대구일중 사이드바</p>
+  <h1>같은 내용,<br>세 번의 부탁.</h1>
+  <p>업무 사이드바를 선생님들께 소개하는 페이지를 Claude와 만들었습니다. 내용은 거의 그대로인데 세 번 만들었고, 세 번 다 모양이 달랐습니다. 무엇을 부탁했고, AI가 무엇을 보고 만들었는지 순서대로 정리했습니다.</p>
+
+  <div class="three">
+    <figure class="shot"><div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="img/compare/v1-top.jpg" alt="1판 첫 화면: 흰 바탕, 왼쪽 제목과 오른쪽 모니터 그림" width="1280" height="800"></div>
+      <figcaption><span class="tag t1">1판</span>레퍼런스 없이</figcaption></figure>
+    <figure class="shot"><div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="img/compare/v2-top.jpg" alt="2판 첫 화면: 흰 바탕, 가운데 아이콘과 큰 제목" width="1280" height="800"></div>
+      <figcaption><span class="tag t2">2판</span>레퍼런스를 글로만 읽고</figcaption></figure>
+    <figure class="shot"><div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="img/compare/v3-top.jpg" alt="3판 첫 화면: 어두운 바탕, 큰 흰 제목과 두 버튼" width="1280" height="800"></div>
+      <figcaption><span class="tag t3">3판</span>레퍼런스를 눈으로 보고</figcaption></figure>
+  </div>
+</header>
+
+<main>
+  <section class="wrap round">
+    <div>
+      <span class="tag t1">1판</span>
+      <h2>레퍼런스 없이 내용부터</h2>
+      <p class="lead">사용법과 실제 PC 화면을 섞어 달라고만 했습니다. 디자인 방향은 AI가 정했습니다.</p>
+      <div class="chat">
+        <p class="who r">나</p>
+        <p class="msg me">대구일중-사이드바 사용법과 컴퓨터 적용화면을 적절히 섞어서 html로 마음에 들면 사용하라고 하는 메시지 만들어봐</p>
+        <p class="msg me">마음에 들면 써보세요라고 말고 이렇게 쓰면 편할것 같아서 만들어봤습니다.</p>
+        <p class="who">Claude</p>
+        <p class="msg ai">개발하며 찍어 둔 캡처를 찾아 화면별로 잘라 넣고, 사용법을 옆에 붙였어요.</p>
+        <p class="who r">나</p>
+        <p class="msg me">좋은데 구려.</p>
+      </div>
+      <div class="saw"><b>AI가 본 것</b><p>내 사용법 파일과 화면 캡처. 디자인은 본 것 없이 평소 하던 대로.</p></div>
+    </div>
+    <div class="side">
+      <div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="img/compare/v1-top.jpg" alt="1판 첫 화면" width="1280" height="800"></div>
+      <a class="open" href="1.html">1판 열어 보기</a>
+    </div>
+  </section>
+
+  <section class="wrap round">
+    <div>
+      <span class="tag t2">2판</span>
+      <h2>레퍼런스를 골랐지만, 글만 읽었다</h2>
+      <p class="lead">레퍼런스 다섯 곳을 추천받아 한 곳을 골랐습니다. AI는 그 사이트의 글 구조만 읽을 수 있었는데, 그대로 "구성으로 만들었다"고 답했습니다.</p>
+      <div class="chat">
+        <p class="who r">나</p>
+        <p class="msg me">저건 놔두고 래퍼런스 써서 가보자. 래퍼런스 5개 추천해봐봐</p>
+        <p class="who">Claude</p>
+        <p class="msg ai">PC에 까는 작은 도구 소개 페이지 다섯 곳이에요. 1번 Bartender는 화면 가장자리에 붙는 도구라 성격이 가장 비슷해요.</p>
+        <p class="who r">나</p>
+        <p class="msg me">1번 ㄱㄱ</p>
+        <p class="msg me">이걸로 만든거라고??</p>
+      </div>
+      <div class="saw"><b>AI가 본 것</b><p>사이트의 제목, 소제목, 순서. 색, 글꼴, 그림은 보지 못함.</p></div>
+    </div>
+    <div class="side">
+      <div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="img/compare/v2-top.jpg" alt="2판 첫 화면" width="1280" height="800"></div>
+      <a class="open" href="2.html">2판 열어 보기</a>
+    </div>
+  </section>
+
+  <section class="wrap round">
+    <div>
+      <span class="tag t3">3판</span>
+      <h2>사이트를 직접 열어 보고 나서</h2>
+      <p class="lead">AI가 브라우저로 레퍼런스를 열어 화면을 내려 보며 확인했습니다. 어두운 바탕, 큰 흰 제목, 둥근 카드 바둑판을 보고 다시 만들었습니다.</p>
+      <div class="chat">
+        <p class="who">Claude</p>
+        <p class="msg ai">2판은 글 구조만 보고 만든 거라 실제 모습과 달랐어요. 사이트를 직접 열어 보고 다시 만들었어요.</p>
+        <p class="who r">나</p>
+        <p class="msg me">이게 좋다</p>
+      </div>
+      <div class="saw"><b>AI가 본 것</b><p>레퍼런스 사이트의 실제 화면. 첫 화면, 카드 배치, 버튼 모양, 색까지.</p></div>
+    </div>
+    <div class="side">
+      <div class="frame"><div class="bar"><i></i><i></i><i></i></div><img src="img/compare/v3-top.jpg" alt="3판 첫 화면" width="1280" height="800"></div>
+      <a class="open" href="index.html">3판 열어 보기</a>
+    </div>
+  </section>
+
+  <section class="diff">
+    <div class="wrap">
+      <h2>세 판을 나란히 놓으면</h2>
+      <div class="tablebox">
+        <table>
+          <thead><tr><th></th><th>1판</th><th>2판</th><th>3판</th></tr></thead>
+          <tbody>
+            <tr><th>부탁</th><td>사용법과 화면을 섞어서</td><td>레퍼런스 추천 → 1번으로</td><td>(사이트 이름만 다시 짚음)</td></tr>
+            <tr><th>AI가 본 것</th><td>내 파일과 캡처</td><td>레퍼런스의 글</td><td>레퍼런스의 화면</td></tr>
+            <tr><th>바뀐 것</th><td>정리는 됐지만 평범한 설명서</td><td>순서는 닮고 모양은 그대로</td><td>색, 글꼴, 배치가 통째로</td></tr>
+            <tr><th>내용</th><td colspan="3">세 판 모두 거의 같은 사용법과 같은 화면 캡처</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="learn">
+    <div class="wrap">
+      <h2>이번에 해 보니</h2>
+      <div class="points">
+        <div class="point"><h3>"구려"도 피드백입니다</h3><p>무엇이 싫은지 설명하지 못해도 괜찮았습니다. 대신 "이런 느낌으로"를 하나 같이 주면 다음 판이 훨씬 빨리 나왔습니다.</p></div>
+        <div class="point"><h3>링크를 줬다고 본 건 아닙니다</h3><p>AI가 사이트를 글로만 읽고도 "참고했다"고 말할 수 있습니다. "그 화면을 직접 봤어?" 한 번 물어보면 됩니다. 캡처를 같이 붙이면 더 확실합니다.</p></div>
+        <div class="point"><h3>같은 종류에서 고르기</h3><p>"예쁜 사이트"보다 "화면 가장자리에 붙는 도구의 소개 페이지"처럼, 만드는 것과 같은 종류를 고르니 그대로 옮겨 오기 쉬웠습니다.</p></div>
+        <div class="point"><h3>내용을 먼저 정해 두면 실험이 싸다</h3><p>사용법과 문구를 1판에서 정해 두었더니, 2판과 3판은 옷만 갈아입히면 됐습니다. 디자인을 몇 번이고 바꿔 볼 수 있었습니다.</p></div>
+        <div class="point"><h3>실제 캡처는 한 번 걸러서</h3><p>개발하며 찍은 화면에 업무 메모와 일정이 섞여 있었습니다. 남에게 보여 줄 화면은 개인정보가 없는 칸만 잘라 썼습니다.</p></div>
+        <div class="point"><h3>버전은 지우지 말고 남기기</h3><p>"저건 놔두고"라고 해서 판마다 따로 남았습니다. 덕분에 지금 이렇게 나란히 비교할 수 있습니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="try">
+    <div class="wrap">
+      <h2>그대로 써 볼 수 있는 말</h2>
+      <div class="prompts">
+        <div class="prompt"><span>레퍼런스 찾기</span><q>내가 만드는 것과 같은 종류의 페이지로 레퍼런스 5개 추천해 줘. 각각 무엇이 다른지도.</q><button class="copy" type="button">복사</button></div>
+        <div class="prompt"><span>봤는지 확인</span><q>그 사이트를 직접 열어 봤어? 첫 화면이 어떻게 생겼는지 먼저 설명해 줘.</q><button class="copy" type="button">복사</button></div>
+        <div class="prompt"><span>캡처로 주기</span><q>첨부한 화면 캡처의 색, 글꼴, 배치를 따라서 내 내용으로 다시 만들어 줘.</q><button class="copy" type="button">복사</button></div>
+        <div class="prompt"><span>판 남기기</span><q>지금 것은 그대로 두고, 새 파일로 다음 판을 만들어 줘.</q><button class="copy" type="button">복사</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="whole">
+    <div class="wrap">
+      <h2>세 판 통째로</h2>
+      <p>그림을 누르면 그 판이 열립니다.</p>
+      <div class="strips">
+        <div class="strip"><a href="1.html"><img src="img/compare/v1-full.jpg" alt="1판 전체 페이지" width="480" height="2077" loading="lazy"></a><p><span class="tag t1">1판</span></p></div>
+        <div class="strip"><a href="2.html"><img src="img/compare/v2-full.jpg" alt="2판 전체 페이지" width="480" height="3102" loading="lazy"></a><p><span class="tag t2">2판</span></p></div>
+        <div class="strip"><a href="index.html"><img src="img/compare/v3-full.jpg" alt="3판 전체 페이지" width="480" height="2151" loading="lazy"></a><p><span class="tag t3">3판</span></p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="wrap">Teacher B</div></footer>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.parentNode.querySelector('q').textContent;
+    var done=function(){b.textContent='복사했어요';setTimeout(function(){b.textContent='복사'},1600)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){sel(b)})}else sel(b);
+  });
+});
+function sel(b){var q=b.parentNode.querySelector('q');var r=document.createRange();r.selectNodeContents(q);var s=getSelection();s.removeAllRanges();s.addRange(r)}
+</script>
+</body>
+</html>
